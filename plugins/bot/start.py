@@ -8,6 +8,7 @@ print(admin_id)
 
 @Client.on_message(filters.user(admin_id) & filters.private & filters.command("start", "/"))
 async def start(client, msg):
+    print(msg.text)
     await msg.reply_text("""<b>🛠 MENÙ SPAMBOT</b>
 <i>Usa i bottoni per spostarti all'interno del menù.</i>
 
