@@ -1,5 +1,5 @@
 import pytz
-import pyrogram.enums.ChatType
+import pyrogram.enums
 from datetime import datetime, timedelta
 
 class Database:
