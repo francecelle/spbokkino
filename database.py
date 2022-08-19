@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 class Database:
     def __init__(self):
         self.messages = {
-        1:{"message":msg, "active":False, "time":0},
-        2:{"message":msg, "active":False, "time":0},
-        3:{"message":msg, "active":False, "time":0}
+        1:{"message":None, "active":False, "time":0},
+        2:{"message":None, "active":False, "time":0},
+        3:{"message":None, "active":False, "time":0}
         }
         self.blocked = []
         self.las_time, self.tz = 0, pytz.timezone("Europe/Rome")
