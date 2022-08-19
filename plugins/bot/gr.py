@@ -46,4 +46,4 @@ async def showbl(client, q):
         inline.append([InlineKeyboardButton("▶", f"groups{skip+1}")])
         text = text[0:4096]
     inline.append([InlineKeyboardButton("🔙 Indietro", "home")])
-    await q.message.edit(text, reply_markup=InlineKeyboardMarkup(inline)
+    await q.message.edit(text, reply_markup=InlineKeyboardMarkup(inline))
