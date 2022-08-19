@@ -43,7 +43,7 @@ async def showbl(client, q):
         text += f"\n<code>{gr}</code>"
     text = text[n:-1]
     if len(text) > 4096:
-        inline.append([InlineKeyboardButton("▶"), f"groups{skip+1}")])
+        inline.append([InlineKeyboardButton("▶", f"groups{skip+1}")])
         text = text[0:4096]
     inline.append([InlineKeyboardButton("🔙 Indietro", "home")])
     await q.message.edit(text, reply_markup=InlineKeyboardMarkup(inline)
