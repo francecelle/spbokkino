@@ -12,7 +12,7 @@ async def blockgr(client, m):
         bl = await client.db.get_blocked()
         if id not in bl:
             await client.db.block(id)
-            text = "<b>✅ » Gruppo bloccato correttamente!</b>"l
+            text = "<b>✅ » Gruppo bloccato correttamente!</b>"
         else:
             text = "❌ <b>Non puoi bloccare il gruppo</b>\n<i>Il gruppo è già bloccato</i>"
         await m.reply_text(text, reply_markup=inline)
