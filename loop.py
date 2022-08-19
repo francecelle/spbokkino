@@ -17,7 +17,7 @@ class Loop:
                 t = await cb(n)
                 await asyncio.sleep(t)
         await self.loop(cb)
-    async def spamming(self):
+    def spamming(self):
         async def func(callback):
             await self.loop(callback)
         return func
