@@ -5,7 +5,7 @@ from database import Database
 from plugins.mylogger import logger
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import *
-from pyrogram import idle
+from pyrogram import Client, idle
 
 bot = Client("spambot", os.environ["api_id"], os.environ["api_hash"], bot_token=os.environ['token'], plugins={'root':'plugins/bot'})
 
