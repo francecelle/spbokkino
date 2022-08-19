@@ -88,8 +88,7 @@ async def spam(n):
                 await logger.log(f"Floodwait per {e.x}s")
                 await asyncio.sleep(e.x)
             elif e.id in ("CHAT_ADMIN_REQUIRED", "CHAT_FORBIDDEN", "CHAT_WRITE_FORBIDDEN", "USER_RESTRICTED"):
-                await logger.log("Sono uscito, perché non ho il permesso di scriver
-                e")
+                await logger.log("Sono uscito, perché non ho il permesso di scrivere")
                 await bot.ubot.leave_chat(chat_id)
     return time
 
