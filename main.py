@@ -15,7 +15,11 @@ bot.start()
 @bot.cache.on("wait_voip")
 async def wait_voip(m):
     if bot.ubot:
-        await bot.ubot.stop()
+        try:
+            await bot.ubot.stop()
+        except ConnectionError:
+            bot.ubot = None
+            return await bot.cache.close("wait_voip")
     bot.ubot = Client("ubot", os.environ["api_id"], os.environ["api_hash"])
     inline = InlineKeyboardMarkup([[InlineKeyboardButton("❌ Annulla ❌ ", "stop!wait_code")]])
     await bot.ubot.connect()
@@ -24,6 +28,9 @@ async def wait_voip(m):
         await bot.cache.close("wait_voip")
         await bot.cache.process("wait_code", m.text, obj)
         await m.reply_text(f"📨 Inviami il <b>codice</b> d'accesso per accedere.", reply_markup=inline)
+    except FloodWait as fw:
+        await m.reply_text("⚠️ <b>Codice non inviato</b>\n<i>Hai effettuato troppi tentantivi di accesso e sono in andato in FloodWait</i>")
+        await bot.cache.close("wait_voip")
     except BadRequest as bad:
         await m.reply_text("❌ <b>Il numero non è valido</b>\n<i>Controlla che sia corretto o prova con un altro numero</i>", reply_markup=inline)
 
