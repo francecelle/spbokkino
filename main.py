@@ -9,7 +9,7 @@ from pyrogram import Client, idle
 
 bot = Client("spambot", os.environ["api_id"], os.environ["api_hash"], bot_token=os.environ['token'], plugins={'root':'plugins/bot'})
 
-bot.cache, bot.ubot, bot.db, bot.loop = Cache(), None, Database(), Loop()
+bot.cache, bot.ubot, bot.db, bot.loop = Cache(bot), None, Database(), Loop()
 bot.start()
 
 @bot.cache.on("wait_voip")
@@ -33,6 +33,8 @@ async def wait_code(m, number, sentcode):
         user = await bot.ubot.sign_in(number, sentcode.phone_code_hash, m.text)
         await bot.cache.close("wait_code")
         #termini
+        if not user:
+            user = await bot.ubot.sign_up(number, sentcode.phone_code_hash, "PinkoPallo")
         await bot.ubot.start()
         await m.reply_text("✅ <b>» Login completato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Home", "home")]]))
     except SessionPasswordNeeded:
@@ -53,22 +55,22 @@ async def wait_pass(m):
 @bot.cache.on("wait_message")
 async def wait_message(m, n):
     await bot.db.set_message(m, n)
-    await m.reply_text("✅ <b>» Messaggio impostato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Home", "home")]]))
+    await m.reply_text("✅ <b>» Messaggio impostato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Indietro", "message")]]))
 
 @bot.cache.on("wait_time")
 async def wait_message(m, n):
-    t = 0
-    d, h, m, s = re.search("(\d+)d", m.text), re.search("(\d+)h", m.text), re.search("(\d+)m", m.text), re.search("(\d+)s", m.text)
+    time = 0
+    d, h, min, s = re.search("(\d+)d", m.text), re.search("(\d+)h", m.text), re.search("(\d+)m", m.text), re.search("(\d+)s", m.text)
     if d:
-        time += d.group(1)*86400
+        time += int(d.group(1))*86400
     if h:
-        time += h.group(1)*3600
-    if m:
-        time += m.group(1)*60
+        time += int(h.group(1))*3600
+    if min:
+        time += int(min.group(1))*60
     if s:
-        time += m.group(1)
-    await bot.db.set_time(t, n)
-    await m.reply_text("✅ <b>»Tempo impostato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Home", "home")]]))
+        time += int(s.group(1))
+    await bot.db.set_time(time, n)
+    await m.reply_text("✅ <b>»Tempo impostato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Indietro", "message")]]))
 
 @bot.loop.spamming()
 async def spam(n):
@@ -92,5 +94,5 @@ async def spam(n):
                 await bot.ubot.leave_chat(chat_id)
     return time
 
-
+print("Bot started")
 idle()

@@ -3,9 +3,9 @@ import asyncio
 class Loop:
     def __init__(self):
         self.spam = False
-    async def start():
+    async def start(self):
         self.spam = True
-    async def stop():
+    async def stop(self):
         self.spam = False
     async def _range(self):
         yield 1

@@ -4,11 +4,9 @@ from pyrogram.errors import BadRequest
 from pyrogram import Client, filters
 
 admin_id = int(os.environ['id'])
-print(admin_id)
 
-@Client.on_message(filters.user(admin_id) & filters.private & filters.command("start", "/"))
-async def start(client, msg):
-    print(msg.text)
+@Client.on_message(filters.private & filters.user(admin_id) & filters.command("start"))
+async def startmkd(client, msg):
     await msg.reply_text("""<b>🛠 MENÙ SPAMBOT</b>
 <i>Usa i bottoni per spostarti all'interno del menù.</i>
 

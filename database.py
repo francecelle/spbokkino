@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 class Database:
     def __init__(self):
         self.messages = {
-        1:{"message":None, "active":False, "time":0},
-        2:{"message":None, "active":False, "time":0},
-        3:{"message":None, "active":False, "time":0}
+        "1":{"message":None, "active":False, "time":0},
+        "2":{"message":None, "active":False, "time":0},
+        "3":{"message":None, "active":False, "time":0}
         }
         self.blocked = []
         self.las_time, self.tz = 0, pytz.timezone("Europe/Rome")
@@ -26,18 +26,17 @@ class Database:
     async def unblock(self, id:int):
         self.blocked.remove(id)
     async def set_time(self, t: int, n: int):
-        self.messages[n]["time"] = t
+        self.messages[str(n)]["time"] = t
     async def set_message(self, msg, n):
-        self.messages[n]["message"] = msg
+        self.messages[str(n)]["message"] = msg
     async def get_mstatus(self):
         v = self.messages
-        return self.getstring(v[1]["message"]), self.getstring(v[2]["message"]), self.getstring(v[3]["message"])
+        return self.getstring(v["1"]["active"]), self.getstring(v["2"]["active"]), self.getstring(v["3"]["active"])
     async def get_status(self, n:int):
-        return self.messages[n]["active"]
+        return self.messages[str(n)]["active"]
     async def get_time(self, n:int):
-        return self.messages[n]["time"]
+        return self.messages[str(n)]["time"]
     async def get_message(self, n:int):
-        return self.messages[n]["message"]
+        return self.messages[str(n)]["message"]
     def getstring(self, value: bool):
         return "✅" if  value else  "❌"
-    

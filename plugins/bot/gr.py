@@ -33,10 +33,10 @@ async def unblockgr(client, m):
         await m.reply_text(text, reply_markup=inline)
     except IndexError:
         await m.reply_text("❌ <b>Sintassi non valida</b>\n<i>Usa /unblock chatid</i>", reply_markup=inline)
-        
+
 @Client.on_callback_query(filters.regex("groups(\d)"))
 async def showbl(client, q):
-    skip, inline = q.matches[0].group(1), []
+    skip, inline = int(q.matches[0].group(1)), []
     bl, n = await client.db.get_blocked(), skip*4096
     text = f"<b>💬 {len(bl)} gruppi bloccati!</b>\n"
     for gr in bl:
