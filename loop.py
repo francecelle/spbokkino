@@ -12,6 +12,7 @@ class Loop:
         yield 2
         yield 3
     async def loop(self, cb):
+        print("loop")
         if self.spam:
             async for n in self._range():
                 t = await cb(n)
