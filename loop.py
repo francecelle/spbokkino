@@ -1,24 +1,33 @@
 import asyncio
+import datetime, time
+#$Env:api_hash = '588ceb8cd037458fee82fd153e6ca444'
+#$Env:api_id
+#$Env:api_id = '1506646'
+#$Env:id = '1076268780'
+#$Env:token = '1375293377:AAGOirgwVaFWAnv7lpupLslKjehLK2psoZ4'
 
+class Crons(object):
+    async def new(self, n: int):
+        setattr(self, str(n), True)
+    async def close(self, n: int):
+        setattr(self, str(n), False)
 class Loop:
     def __init__(self):
-        self.spam = False
-    async def start(self):
-        self.spam = True
-    async def stop(self):
-        self.spam = False
-    async def _range(self):
-        yield 1
-        yield 2
-        yield 3
-    async def loop(self, cb):
-        print("loop")
-        if self.spam:
-            async for n in self._range():
-                t = await cb(n)
-                await asyncio.sleep(t)
-        await self.loop(cb)
+        self.loop = asyncio.get_event_loop()
+        self.callback = None
+        self.crons = Crons()
+    async def recall(self, t, n):
+        if getattr(self.crons, n, None):
+            await cb(n)
+            self.loop.call_at(time.time() + t, self.recall, t, self.callback, n)
+    async def start(self, n: int, t: int):
+        await self.callback(n)
+        await self.crons.new(n)
+        self.loop.call_at(time.time() + t, self.recall, t, self.callback, n)
+    async def stop(self, n: int):
+        await self.crons.close(n)
     def spamming(self):
-        async def func(callback):
-            await self.loop(callback)
+        print("cacata")
+        def func(callback):
+            self.callback = callback
         return func

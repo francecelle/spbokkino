@@ -8,7 +8,7 @@ admin_id = int(os.environ['id'])
 async def blockgr(client, m):
     inline = InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Home", "home")]])
     try:
-        id, text = message.command[1], ""
+        id, text = m.command[1], ""
         bl = await client.db.get_blocked()
         if id not in bl:
             await client.db.block(id)
@@ -23,7 +23,7 @@ async def blockgr(client, m):
 async def unblockgr(client, m):
     inline = InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Home", "home")]])
     try:
-        id, text = message.command[1], ""
+        id, text = m.command[1], ""
         bl = await client.db.get_blocked()
         if id in bl:
             await client.db.unblock(id)
@@ -41,7 +41,7 @@ async def showbl(client, q):
     text = f"<b>💬 {len(bl)} gruppi bloccati!</b>\n"
     for gr in bl:
         text += f"\n<code>{gr}</code>"
-    text = text[n:-1]
+    text = text[n::]
     if len(text) > 4096:
         inline.append([InlineKeyboardButton("▶", f"groups{skip+1}")])
         text = text[0:4096]

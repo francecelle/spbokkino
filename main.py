@@ -12,6 +12,30 @@ bot = Client("spambot", os.environ["api_id"], os.environ["api_hash"], bot_token=
 bot.cache, bot.ubot, bot.db, bot.loop = Cache(bot), None, Database(), Loop()
 bot.start()
 
+async def spam(n):
+    msg = await bot.db.get_message(n)
+    time = await bot.db.get_time(n)
+    async for group in bot.db.get_groups(bot):
+        try:
+            if msg.photo:
+                await bot.ubot.send_photo(group, msg.photo.file_id, msg.caption, caption_entities=msg.caption_entities, disable_web_page_prewiew=True)
+            else:
+                await bot.ubot.send_message(group, msg.text, entities=msg.entities, disable_web_page_prewiew=True)
+        except (FloodWait, Forbidden) as e:
+            print(e.id, e.MESSAGE)
+            if re.match("SLOWMODE_WAIT", e.id):
+                await logger.log(group, f"Modalità lenta attiva ({e.x})")
+            elif re.match("FLOOD_WAIT", e.id):
+                await logger.log(f"Floodwait per {e.x}s")
+                await asyncio.sleep(e.x)
+            elif e.id in ("CHAT_ADMIN_REQUIRED", "CHAT_FORBIDDEN", "CHAT_WRITE_FORBIDDEN", "USER_RESTRICTED"):
+                await logger.log("Sono uscito, perché non ho il permesso di scrivere")
+                await bot.ubot.leave_chat(chat_id)
+    return time
+@bot.loop.spamming()
+async def prova(n):
+    print(n)
+
 @bot.cache.on("wait_voip")
 async def wait_voip(m):
     if bot.ubot:
@@ -78,28 +102,6 @@ async def wait_message(m, n):
         time += int(s.group(1))
     await bot.db.set_time(time, n)
     await m.reply_text("✅ <b>»Tempo impostato con successo!</b>", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Indietro", "message")]]))
-
-@bot.loop.spamming()
-async def spam(n):
-    msg = await bot.db.get_message(n)
-    time = await bot.db.get_time(n)
-    async for group in bot.db.get_groups(bot):
-        try:
-            if msg.photo:
-                await bot.ubot.send_photo(group, msg.photo.file_id, msg.caption, caption_entities=msg.caption_entities, disable_web_page_prewiew=True)
-            else:
-                await bot.ubot.send_message(group, msg.text, entities=msg.entities, disable_web_page_prewiew=True)
-        except (FloodWait, Forbidden) as e:
-            print(e.id, e.MESSAGE)
-            if re.match("SLOWMODE_WAIT", e.id):
-                await logger.log(group, f"Modalità lenta attiva ({e.x})")
-            elif re.match("FLOOD_WAIT", e.id):
-                await logger.log(f"Floodwait per {e.x}s")
-                await asyncio.sleep(e.x)
-            elif e.id in ("CHAT_ADMIN_REQUIRED", "CHAT_FORBIDDEN", "CHAT_WRITE_FORBIDDEN", "USER_RESTRICTED"):
-                await logger.log("Sono uscito, perché non ho il permesso di scrivere")
-                await bot.ubot.leave_chat(chat_id)
-    return time
 
 print("Bot started")
 idle()

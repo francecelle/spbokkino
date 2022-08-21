@@ -78,10 +78,10 @@ async def set_status(client, q):
     ]))
         i, text = client.db.messages[n]["active"], ""
         if i:
-            await client.loop.start()
+            await client.loop.start(n, time)
             text = "✔️ » Attivato"
         else:
-            await client.loop.stop()
+            await client.loop.stop(n)
             text = "✖️ » Disattivato"
         await q.answer(text, False)
     else:

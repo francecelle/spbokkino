@@ -15,7 +15,7 @@ async def startmkd(client, msg):
 <b>- Messaggi</b>
 <i>potrai modificare il testo, lo status e il tempo di ripetizione dei <b>tre</b> messaggi</i>""", reply_markup=InlineKeyboardMarkup([
     [InlineKeyboardButton("📞 Voip", "voip"), InlineKeyboardButton("✏ Messaggi", "message")],
-    [InlineKeyboardButton("Bl", "groups0"), InlineKeyboardButton("📃 Logs", "showlogs")]
+    [InlineKeyboardButton("Bl 🚷", "groups0"), InlineKeyboardButton("📃 Logs", "showlogs")]
     ]))
 
 @Client.on_message(filters.private & filters.user(admin_id) & filters.command("join"))
