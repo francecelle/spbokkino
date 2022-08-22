@@ -12,12 +12,13 @@ class Database:
         self.blocked = []
         self.las_time, self.tz = 0, pytz.timezone("Europe/Rome")
     async def get_groups(self, client):
-        if not client.cache.dialogs or datetime.now()-timedelta(hours=24) >= self.last_time:
-            client.cache.dialogs = client.ubot.get_dialogs()
-        async for chat in client.cache.dialogs:
-            if chat.type in (pyrogram.enums.ChatType.SUPERGROUP, pyrogram.enums.GROUP):
-                if chat.id not in self.blocked:
-                    yield chat.id
+        #if not client.cache.dialogs: #or datetime.now()-timedelta(minutes=15) >= self.last_time:
+            #client.cache.dialogs = client.ubot.get_dialogs()
+        async for dialog in client.ubot.get_dialogs():
+            if dialog.chat.type in (pyrogram.enums.ChatType.SUPERGROUP, pyrogram.enums.ChatType.GROUP):
+                if dialog.chat.id not in self.blocked:
+                    yield dialog.chat.id
+        #self.last_time = datetime.now()
     async def get_blocked(self):
         return self.blocked
     async def block(self, id: int):

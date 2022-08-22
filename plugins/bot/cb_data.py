@@ -89,16 +89,26 @@ async def set_status(client, q):
 
 @Client.on_callback_query(filters.regex("voip"))
 async def voipmenu(client, q):
+    text = "📞 "
+    if client.ubot:
+        text += "<b>Voip attuale</b>\n"
+        me = await client.ubot.get_me()
+        text += me.mention(style="html")+f"\n<code>+{me.phone_number}</code>\n\n💡 "
+    text += """Inviami <b>il numero</b> del nuovo voip da utilizzare per <b>spammare</b>"""
     await q.message.edit(
-    """📞 Inviami <b>il numero</b> del voip da utilizzare per <b>spammare</b>""",
-    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Annulla", "stop!voip")]])
+    text,
+    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Annulla", "stop!wait_voip")]])
         )
-    await client.cache.process("wait_voip", q.message.chat.id)
+    await client.cache.process("wait_voip", q.message.chat.id, q.message)
 
 @Client.on_callback_query(filters.regex("showlogs"))
 async def showlogs(client, q):
-    text = "⚠️ <b>Logs</b>\n"
-    await q.answer(text)
+    text = "⚠️ <b>Logs</b>\n\n<code>"
+    with open("logs.txt", "r") as f:
+        text += f.read()
+        text += "</code>"
+        f.close()
+    await q.message.edit(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Indietro", "home")]]))
 
 @Client.on_callback_query(filters.regex("message"))
 async def memenu(client, q):
